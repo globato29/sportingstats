@@ -1,7 +1,7 @@
 streamlit>=1.30.0
-soccerdata>=1.5.0
-pandas>=2.1.0
+soccerdata==1.5.1
+pandas>=2.0.0
 plotly>=5.18.0
-lxml>=5.1.0
+lxml==4.9.4
 html5lib
 scipy
