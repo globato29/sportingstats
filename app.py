@@ -129,3 +129,9 @@ with tab3:
     fig_def = px.scatter(def_metrics, x='Interceções', y='Desarmes Ganhos', text='Jogador',
                          title="Atividade Defensiva: Desarmes vs Interceções", size_max=60)
     st.plotly_chart(fig_def, use_container_width=True)
+
+    # No tab3, podes adicionar isto:
+    st.subheader("Eficácia do Guarda-redes (PSxG)")
+    gk_data = _fb.read_player_season_stats(stat_type="keepersadv")
+    # PSxG +/- indica quantos golos o GR evitou (positivo é bom!)
+    # Se o Franco Israel estiver a defender acima do esperado, o valor será positivo.
