@@ -1,0 +1,7 @@
+streamlit
+soccerdata
+pandas
+plotly
+lxml
+html5lib
+scipy
