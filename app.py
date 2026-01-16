@@ -26,17 +26,26 @@ def get_data_from_fbref(season, stat_type):
     return df
 
 # --- RECOLHA DOS DADOS ---
-try:
-    with st.spinner('A recolher estatísticas oficiais...'):
-        # Chamamos a função para cada tipo de estatística
-        ars_std = get_data_from_fbref(season_input, "standard")
-        ars_shoot = get_data_from_fbref(season_input, "shooting")
-        ars_pass = get_data_from_fbref(season_input, "passing")
-        ars_def = get_data_from_fbref(season_input, "defense")
+import os
+
+@st.cache_data
+def get_data_from_fbref(season, stat_type):
+    # Criar uma pasta local para cache se não existir
+    if not os.path.exists('./data'):
+        os.makedirs('./data')
         
-except Exception as e:
-    st.error(f"Ocorreu um erro: {e}")
-    st.stop()
+    # Adicionamos o 'data_dir' para evitar conflitos de permissões no Railway
+    # E tentamos ser o mais específicos possível
+    fb = sd.FBref(leagues="ENG-Premier League", seasons=season, data_dir='./data')
+    
+    try:
+        df = fb.read_player_season_stats(stat_type=stat_type)
+        df = df.reset_index()
+        df = df[df['team'].str.contains("Arsenal", na=False)]
+        return df
+    except Exception as e:
+        # Se falhar, tentamos dar um erro mais amigável
+        raise Exception(f"O FBref bloqueou o acesso. Tenta novamente daqui a 15 min ou muda a fonte. Erro: {e}")
 
 # --- DASHBOARD ---
 tab1, tab2 = st.tabs(["🎯 Ataque", "🛡️ Defesa"])
